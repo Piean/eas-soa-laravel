@@ -11,6 +11,12 @@
 |
 */
 
+
+Route::group(['prefix' => 'user', 'namespace' => 'User'], function()
+{
+    Route::get('/login','UserController@login');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
