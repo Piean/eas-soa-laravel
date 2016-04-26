@@ -11,12 +11,12 @@
 |
 */
 
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Route::group(['prefix' => 'user', 'namespace' => 'User'], function()
 {
     Route::get('/login','UserController@login');
-});
-
-Route::get('/', function () {
-    return view('welcome');
+    Route::get('/uuid','UserController@getUUID');
 });

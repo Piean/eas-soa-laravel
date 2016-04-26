@@ -8,19 +8,24 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Model\UserInfoModel;
+use App\Utils\UuidUtil;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller {
 
     public function login(Request $request) {
-        $name = 'admin';
-        $pass = 'admin';
-        $result = DB::table('userinfo')
-            ->where('username', '=', $name)
+        $name = $request->input('name');
+        $pass = $request->input('pass');
+        $user = UserInfoModel
+            ::where('username', '=', $name)
             ->where('userpass', '=', $pass)
             ->first();
-        var_dump($result->userid);
+        return json_encode($user,JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getUUID() {
+        echo UuidUtil::getUUID();
     }
 }
