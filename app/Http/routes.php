@@ -18,5 +18,6 @@ Route::get('/', function () {
 Route::group(['prefix' => 'user', 'namespace' => 'User'], function()
 {
     Route::get('/login','UserController@login');
+    Route::get('/change_pass','UserController@changePass');
     Route::get('/uuid','UserController@getUUID');
 });
