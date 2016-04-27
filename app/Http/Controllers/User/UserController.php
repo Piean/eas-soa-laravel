@@ -8,7 +8,8 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Response\Result;
+use App\Model\StudentInfoModel;
+use App\Model\TeacherInfoModel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -86,6 +87,108 @@ class UserController extends Controller {
                 $result['message'] = '用户不存在';
             }
         }
+
+        return json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
+    public function queryUserInfoByUserId(Request $request) {
+        $result = array(
+            'status' => false,
+            'message' => '',
+            'result' => (object)null
+        );
+
+        $userId = $request->input('userId');
+
+        if (StringUtil::isNotEmpty($userId)) {
+            $level = UserInfoModel
+                ::where('userid', '=', $userId)
+                ->first();
+            if($level != null) {
+                if ($level->level == 2) {
+                    $teacher = TeacherInfoModel
+                        ::where('teacherid', '=', $userId)
+                        ->first();
+                    if ($teacher != null) {
+                        $result['status'] = true;
+                        $result['message'] = '查询成功';
+                        $result['result'] = $teacher;
+                    }else {
+                        $result['message'] = '查询失败';
+                    }
+                }else if ($level->level == 3) {
+                    $student = StudentInfoModel
+                        ::where('studentid', '=', $userId)
+                        ->first();
+                    if ($student != null) {
+                        $result['status'] = true;
+                        $result['message'] = '查询成功';
+                        $result['result'] = $student;
+                    }else {
+                        $result['message'] = '查询失败';
+                    }
+                }else {
+                    $result['message'] = '用户权限不合法，请联系管理员';
+                }
+            }else {
+                $result['message'] = '用户不存在';
+            }
+        }else {
+            $result['message'] = '用户ID为空';
+        }
+
+        return json_encode($result,JSON_UNESCAPED_UNICODE);
+    }
+
+    public function changeUserInfoByUserId(Request $request) {
+        $result = array(
+            'status' => false,
+            'message' => '',
+            'result' => (object)null
+        );
+
+        $userId = $request->input('userId');
+        $mobile = $request->input('mobile');
+
+        if (!StringUtil::isNotEmpty($userId)) {
+            $result['message'] = '用户ID为空';
+        }else if (!StringUtil::isNotEmpty($mobile)) {
+            $result['message'] = '手机号为空';
+        }else {
+            $level = UserInfoModel
+                ::where('userid', '=', $userId)
+                ->first();
+            if($level != null) {
+                if ($level->level == 2) {
+                    $teacher = TeacherInfoModel
+                        ::where('teacherid', '=', $userId)
+                        ->update(['mobile' => $mobile]);
+                    if ($teacher >= 1) {
+                        $result['status'] = true;
+                        $result['message'] = '修改成功';
+//                        $result['result'] = $teacher;
+                    }else {
+                        $result['message'] = '修改失败';
+                    }
+                }else if ($level->level == 3) {
+                    $student = StudentInfoModel
+                        ::where('studentid', '=', $userId)
+                        ->update(['mobile' => $mobile]);
+                    if ($student >= 1) {
+                        $result['status'] = true;
+                        $result['message'] = '修改成功';
+//                        $result['result'] = $student;
+                    }else {
+                        $result['message'] = '修改失败';
+                    }
+                }else {
+                    $result['message'] = '用户权限不合法，请联系管理员';
+                }
+            }else {
+                $result['message'] = '用户不存在';
+            }
+        }
+
         return json_encode($result,JSON_UNESCAPED_UNICODE);
     }
 
