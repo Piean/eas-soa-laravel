@@ -15,11 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/uuid', [
+    'as' => 'profile', 'uses' => 'User\UserController@getUUID'
+]);
+
 Route::group(['prefix' => 'user', 'namespace' => 'User'], function()
 {
     Route::get('/login','UserController@login');
     Route::get('/change_pass','UserController@changePass');
     Route::get('/query_info','UserController@queryUserInfoByUserId');
     Route::get('/change_info','UserController@changeUserInfoByUserId');
-    Route::get('/uuid','UserController@getUUID');
 });
