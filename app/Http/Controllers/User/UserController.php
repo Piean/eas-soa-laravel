@@ -53,22 +53,18 @@ class UserController extends Controller {
         $result = array(
             'status' => false,
             'message' => '',
-            'result' => (object)null
         );
 
         $userId = $request->input('userId');
         $oldPass = $request->input('oldPass');
         $newPass = $request->input('newPass');
-        $confirmPass = $request->input('confirmPass');
 
         if (!StringUtil::isNotEmpty($userId)) {
             $result['message'] = '用户ID为空';
         }else if (!StringUtil::isNotEmpty($oldPass)) {
             $result['message'] = '原密码为空';
-        }else if (!StringUtil::isNotEmpty($newPass) || !StringUtil::isNotEmpty($confirmPass)) {
+        }else if (!StringUtil::isNotEmpty($newPass)) {
             $result['message'] = '新密码为空';
-        }else if ($oldPass != $confirmPass) {
-            $result['message'] = '新密码与确认密码不相同';
         }else {
             $userNo = DB::table('userinfo')
                 ->where('userid', '=', $userId)->first();
@@ -144,7 +140,6 @@ class UserController extends Controller {
         $result = array(
             'status' => false,
             'message' => '',
-            'result' => (object)null
         );
 
         $userId = $request->input('userId');
